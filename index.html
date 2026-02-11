@@ -75,12 +75,24 @@
         }
         .nav-links a:hover { color: var(--accent-green); }
         
+        /* ОБНОВЛЕННЫЙ СТИЛЬ КНОПКИ ПОРТАЛА */
         .portal-btn {
-            font-size: 14px; font-weight: 700; padding: 10px 24px;
-            border: 2px solid var(--accent-green); border-radius: 30px;
-            color: var(--accent-green); margin-left: 20px;
+            font-size: 14px; 
+            font-weight: 700; 
+            padding: 10px 24px;
+            border-radius: 30px;
+            margin-left: 20px;
+            
+            /* Полупрозрачный фон (синий с прозрачностью 10%) */
+            background-color: rgba(10, 59, 102, 0.1); 
+            color: var(--primary-blue);
+            
+            transition: all 0.3s ease;
         }
-        .portal-btn:hover { background: var(--accent-green); color: white; }
+        .portal-btn:hover { 
+            background: var(--primary-blue); 
+            color: white; 
+        }
 
         /* HERO */
         .hero {
@@ -176,6 +188,8 @@
                 <a href="#contact">Contact</a>
             </nav>
 
+            <!-- ОБНОВЛЕННАЯ КНОПКА -->
+            <a href="portal.html" class="portal-btn">School Portal</a>
         </div>
     </header>
 
