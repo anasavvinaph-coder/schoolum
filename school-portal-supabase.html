@@ -1110,7 +1110,14 @@
                 return;
             }
             
-            const avg = (studentGrades.reduce((sum, g) => sum + parseInt(g.grade), 0) / studentGrades.length).toFixed(1);
+            // Карта перевода букв в цифры (A=5, B=4, C=3, D=2)
+const gradeValues = { 'A': 5, 'B': 4, 'C': 3, 'D': 2 };
+
+const avg = (studentGrades.reduce((sum, g) => {
+    // Если оценка буква - берем цифру из карты, если цифра - оставляем как есть
+    return sum + (gradeValues[g.grade] || parseInt(g.grade) || 0);
+}, 0) / studentGrades.length).toFixed(1);
+            
             document.getElementById('parentAvgGrade').textContent = avg;
             document.getElementById('parentTotalGrades').textContent = studentGrades.length;
             
