@@ -1,0 +1,1162 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Portal</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <style>
+        .fade-in {
+            animation: fadeIn 0.3s ease-in;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .entry-card {
+            transition: all 0.3s ease;
+        }
+        .entry-card:hover {
+            transform: translateY(-2px);
+        }
+        .grade-cell {
+            min-width: 50px;
+            text-align: center;
+        }
+        .student-row:hover {
+            background-color: #f3f4f6;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-50 to-indigo-100 min-h-screen">
+    <div id="app" class="container mx-auto px-4 py-8 max-w-7xl">
+        <!-- Login Screen -->
+        <div id="loginScreen" class="fade-in">
+            <div class="bg-white rounded-2xl shadow-2xl p-8 max-w-md mx-auto">
+                <div class="text-center mb-8">
+                    <div class="bg-indigo-600 w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                        </svg>
+                    </div>
+                    <h1 class="text-3xl font-bold text-gray-800">School Portal</h1>
+                    <p class="text-gray-500 mt-2">Please log in with your access key</p>
+                </div>
+                
+                <div id="loginError" class="hidden bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
+                    Invalid access key
+                </div>
+                
+                <div id="loadingIndicator" class="hidden text-center py-4">
+                    <div class="inline-block animate-spin rounded-full h-8 w-8 border-b-2 border-indigo-600"></div>
+                    <p class="mt-2 text-gray-600">Loading data from database...</p>
+                </div>
+                
+                <form id="loginForm" class="space-y-6">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Access Key</label>
+                        <input type="text" id="accessKey" required 
+                            class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent"
+                            placeholder="Enter your access key">
+                    </div>
+                    
+                    <button type="submit" 
+                        class="w-full bg-indigo-600 text-white py-3 rounded-lg font-semibold hover:bg-indigo-700 transition duration-200">
+                        Log In
+                    </button>
+                </form>
+                
+                <div class="mt-8 p-4 bg-gray-50 rounded-lg text-sm text-gray-600">
+                    <p class="font-semibold mb-2">Test access keys:</p>
+                    <p><strong>Teacher:</strong> TCH-MTH-2025-A1</p>
+                    <p><strong>Parent:</strong> PAR-VIK-KER-G1</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Teacher Dashboard -->
+        <div id="teacherDashboard" class="hidden fade-in">
+            <div class="bg-white rounded-2xl shadow-2xl p-8">
+                <div class="flex justify-between items-center mb-8">
+                    <div>
+                        <h1 class="text-3xl font-bold text-gray-800">Teacher Dashboard</h1>
+                        <p class="text-gray-500 mt-1">Manage lessons and grades</p>
+                    </div>
+                    <div class="flex gap-3">
+                        <button id="clearDataBtn" 
+                            class="bg-yellow-500 text-white px-6 py-2 rounded-lg hover:bg-yellow-600 transition">
+                            Clear All Data
+                        </button>
+                        <button id="logoutTeacher" 
+                            class="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600 transition">
+                            Log Out
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Tabs -->
+                <div class="mb-8 border-b border-gray-200">
+                    <nav class="flex space-x-8">
+                        <button id="lessonTab" class="tab-button py-4 px-1 border-b-2 border-indigo-500 font-medium text-indigo-600">
+                            Lessons & Homework
+                        </button>
+                        <button id="gradesTab" class="tab-button py-4 px-1 border-b-2 border-transparent font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                            Grade Journal
+                        </button>
+                    </nav>
+                </div>
+
+                <!-- Lessons Tab Content -->
+                <div id="lessonTabContent">
+                    <!-- Add Class Entry Form -->
+                    <div class="bg-indigo-50 rounded-xl p-6 mb-8">
+                        <h2 class="text-xl font-semibold text-gray-800 mb-4">Add Class Entry</h2>
+                        <form id="addClassEntryForm" class="space-y-4">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Date</label>
+                                    <input type="date" id="classEntryDate" required 
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                                </div>
+                                
+                                <div>
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Grade</label>
+                                    <select id="classGrade" required 
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                                        <option value="">Select Grade</option>
+                                        <option value="1">Grade 1</option>
+                                        <option value="2">Grade 2</option>
+                                        <option value="3">Grade 3</option>
+                                        <option value="4">Grade 4</option>
+                                        <option value="8">Grade 8</option>
+                                        <option value="10">Grade 10</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Dynamic Subject Entries -->
+                            <div id="subjectEntriesContainer" class="space-y-4">
+                                <div class="subject-entry border border-gray-200 rounded-lg p-4">
+                                    <div class="grid grid-cols-1 gap-3">
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">Subject</label>
+                                            <select class="subject-name w-full px-3 py-2 border border-gray-300 rounded-lg" required>
+                                                <option value="">Select Subject</option>
+                                                <option value="Math">Math</option>
+                                                <option value="Science">Science</option>
+                                                <option value="English">English</option>
+                                                <option value="Montenegrin">Montenegrin</option>
+                                                <option value="IT">IT</option>
+                                                <option value="Art">Art</option>
+                                                <option value="History">History</option>
+                                                <option value="Geography">Geography</option>
+                                            </select>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">Lesson Topic</label>
+                                            <input type="text" class="subject-topic w-full px-3 py-2 border border-gray-300 rounded-lg" 
+                                                placeholder="Quadratic equations" required>
+                                        </div>
+                                        <div>
+                                            <label class="block text-sm font-medium text-gray-700 mb-1">Homework</label>
+                                            <input type="text" class="subject-homework w-full px-3 py-2 border border-gray-300 rounded-lg" 
+                                                placeholder="Pages 45-47">
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="flex gap-3">
+                                <button type="button" id="addSubjectBtn"
+                                    class="bg-green-500 text-white px-6 py-2 rounded-lg hover:bg-green-600 transition">
+                                    + Add Another Subject
+                                </button>
+                                <button type="submit" 
+                                    class="bg-indigo-600 text-white px-8 py-2 rounded-lg font-semibold hover:bg-indigo-700 transition">
+                                    Save for Entire Class
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- View Class Entries -->
+                    <div>
+                        <div class="flex justify-between items-center mb-4">
+                            <h2 class="text-xl font-semibold text-gray-800">Class Entry History</h2>
+                            <select id="viewGradeFilter" 
+                                class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                                <option value="">All Grades</option>
+                                <option value="1">Grade 1</option>
+                                <option value="2">Grade 2</option>
+                                <option value="3">Grade 3</option>
+                                <option value="4">Grade 4</option>
+                                <option value="8">Grade 8</option>
+                                <option value="10">Grade 10</option>
+                            </select>
+                        </div>
+                        <div id="teacherEntriesList" class="space-y-4"></div>
+                    </div>
+                </div>
+
+                <!-- Grades Tab Content -->
+                <div id="gradesTabContent" class="hidden">
+                    <div class="mb-6">
+                        <label class="block text-sm font-medium text-gray-700 mb-2">Select Grade</label>
+                        <select id="gradeJournalGrade" 
+                            class="px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                            <option value="">Select Grade</option>
+                            <option value="1">Grade 1</option>
+                            <option value="2">Grade 2</option>
+                            <option value="3">Grade 3</option>
+                            <option value="4">Grade 4</option>
+                            <option value="8">Grade 8</option>
+                            <option value="10">Grade 10</option>
+                        </select>
+                    </div>
+
+                    <!-- Grade Entry Form -->
+                    <div id="gradeEntrySection" class="hidden">
+                        <div class="bg-green-50 rounded-xl p-6 mb-6">
+                            <h3 class="text-lg font-semibold text-gray-800 mb-4">Add Grades for Date</h3>
+                            <div class="flex gap-4 items-end">
+                                <div class="flex-1">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Date</label>
+                                    <input type="date" id="gradeDate" 
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                                </div>
+                                <div class="flex-1">
+                                    <label class="block text-sm font-medium text-gray-700 mb-2">Subject</label>
+                                    <select id="gradeSubject" 
+                                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-indigo-500">
+                                        <option value="">Select Subject</option>
+                                        <option value="Math">Math</option>
+                                        <option value="Science">Science</option>
+                                        <option value="English">English</option>
+                                        <option value="Montenegrin">Montenegrin</option>
+                                        <option value="IT">IT</option>
+                                        <option value="Art">Art</option>
+                                        <option value="History">History</option>
+                                        <option value="Geography">Geography</option>
+                                    </select>
+                                </div>
+                                <button id="startGradeEntry" 
+                                    class="bg-indigo-600 text-white px-6 py-2 rounded-lg hover:bg-indigo-700 transition">
+                                    Start Grading
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Grade Input Table -->
+                        <div id="gradeInputTable" class="hidden bg-white rounded-xl border border-gray-200 overflow-hidden mb-6">
+                            <div class="p-4 bg-gray-50 border-b border-gray-200">
+                                <h4 class="font-semibold text-gray-800">Enter Grades</h4>
+                                <p class="text-sm text-gray-600 mt-1" id="gradingInfo"></p>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <table class="w-full">
+                                    <thead class="bg-gray-50">
+                                        <tr>
+                                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Student</th>
+                                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase">Grade</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="gradeInputTableBody" class="divide-y divide-gray-200">
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="p-4 bg-gray-50 border-t border-gray-200">
+                                <button id="saveGrades" 
+                                    class="bg-green-600 text-white px-6 py-2 rounded-lg hover:bg-green-700 transition">
+                                    Save All Grades
+                                </button>
+                            </div>
+                        </div>
+
+                        <!-- Grade Journal View -->
+                        <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+                            <div class="p-4 bg-gray-50 border-b border-gray-200">
+                                <h4 class="font-semibold text-gray-800">Grade Journal</h4>
+                            </div>
+                            <div class="overflow-x-auto">
+                                <div id="gradeJournalView" class="p-4"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Parent Dashboard -->
+        <div id="parentDashboard" class="hidden fade-in">
+            <div class="bg-white rounded-2xl shadow-2xl p-8">
+                <div class="flex justify-between items-center mb-8">
+                    <div>
+                        <h1 class="text-3xl font-bold text-gray-800">Student Journal</h1>
+                        <p class="text-gray-500 mt-1" id="studentName"></p>
+                    </div>
+                    <button id="logoutParent" 
+                        class="bg-red-500 text-white px-6 py-2 rounded-lg hover:bg-red-600 transition">
+                        Log Out
+                    </button>
+                </div>
+
+                <!-- Tabs for Parent -->
+                <div class="mb-8 border-b border-gray-200">
+                    <nav class="flex space-x-8">
+                        <button id="parentLessonTab" class="parent-tab-button py-4 px-1 border-b-2 border-indigo-500 font-medium text-indigo-600">
+                            Lessons & Homework
+                        </button>
+                        <button id="parentGradesTab" class="parent-tab-button py-4 px-1 border-b-2 border-transparent font-medium text-gray-500 hover:text-gray-700 hover:border-gray-300">
+                            Grades
+                        </button>
+                    </nav>
+                </div>
+
+                <!-- Parent Lessons Tab -->
+                <div id="parentLessonTabContent">
+                    <!-- Statistics -->
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                        <div class="bg-blue-50 rounded-xl p-6">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm text-gray-600 mb-1">Total Days</p>
+                                    <p class="text-3xl font-bold text-blue-600" id="totalDays">0</p>
+                                </div>
+                                <div class="bg-blue-100 rounded-full p-3">
+                                    <svg class="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-purple-50 rounded-xl p-6">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm text-gray-600 mb-1">Total Subjects</p>
+                                    <p class="text-3xl font-bold text-purple-600" id="totalSubjects">0</p>
+                                </div>
+                                <div class="bg-purple-100 rounded-full p-3">
+                                    <svg class="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="bg-green-50 rounded-xl p-6">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm text-gray-600 mb-1">Homework Assigned</p>
+                                    <p class="text-3xl font-bold text-green-600" id="totalHomework">0</p>
+                                </div>
+                                <div class="bg-green-100 rounded-full p-3">
+                                    <svg class="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Entries by Date -->
+                    <div>
+                        <h2 class="text-xl font-semibold text-gray-800 mb-4">Journal Entries by Date</h2>
+                        <div id="parentEntriesList" class="space-y-4"></div>
+                    </div>
+                </div>
+
+                <!-- Parent Grades Tab -->
+                <div id="parentGradesTabContent" class="hidden">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                        <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-6">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm text-gray-600 mb-1">Average Grade</p>
+                                    <p class="text-4xl font-bold text-green-600" id="parentAvgGrade">-</p>
+                                </div>
+                                <div class="bg-green-100 rounded-full p-4">
+                                    <svg class="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6">
+                            <div class="flex items-center justify-between">
+                                <div>
+                                    <p class="text-sm text-gray-600 mb-1">Total Grades</p>
+                                    <p class="text-4xl font-bold text-blue-600" id="parentTotalGrades">0</p>
+                                </div>
+                                <div class="bg-blue-100 rounded-full p-4">
+                                    <svg class="w-10 h-10 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                    </svg>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
+                        <div class="p-4 bg-gray-50 border-b border-gray-200">
+                            <h3 class="font-semibold text-gray-800">Grade History</h3>
+                        </div>
+                        <div id="parentGradesList" class="p-4"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Supabase Configuration
+        const SUPABASE_URL = 'https://shhktowqnbsukpvnovjn.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNoaGt0b3dxbmJzdWtwdm5vdmpuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzA4NzM0MDksImV4cCI6MjA4NjQ0OTQwOX0.hO6e7uae90VejH5mU86-EADuTyB6Q34wjCfkJnXkLJE';
+        const { createClient } = supabase;
+        const supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
+
+        // Students database
+        const students = {
+            // Grade 1
+            'viktoria.kerova': { name: 'Viktoria Kerova', grade: 1 },
+            'berfin.yurdutek': { name: 'Berfin Yurdutek', grade: 1 },
+            'asia.arutiunian': { name: 'Asia Arutiunian', grade: 1 },
+            'vladislav.gagarskii': { name: 'Vladislav Gagarskii', grade: 1 },
+            'zlatan.koshelev': { name: 'Zlatan Koshelev', grade: 1 },
+            // Grade 2
+            'gabrielle.israeli': { name: 'Gabrielle Israeli Esther', grade: 2 },
+            // Grade 3
+            'artem.savvin': { name: 'Artem Savvin', grade: 3 },
+            'maksim.smirnov': { name: 'Maksim Smirnov', grade: 3 },
+            'melissa.bodina': { name: 'Melissa Bodina', grade: 3 },
+            'myroslava.pogiba': { name: 'Myroslava Pogiba', grade: 3 },
+            'radomir.koshelev': { name: 'Radomir Koshelev', grade: 3 },
+            'varvara.antipina': { name: 'Varvara Antipina', grade: 3 },
+            // Grade 4
+            'arsenii.eremin': { name: 'Arsenii Eremin', grade: 4 },
+            'stanislav.pogiba': { name: 'Stanislav Pogiba', grade: 4 },
+            'yelizaveta.kerova': { name: 'Yelizaveta Kerova', grade: 4 },
+            // Grade 8
+            'andreyi.moisiienko': { name: 'Moisiienko Andreyi', grade: 8 },
+            'milana.smirnova': { name: 'Smirnova Milana', grade: 8 },
+            'alexandra.maeva': { name: 'Maeva Alexandra', grade: 8 },
+            'beren.yarke': { name: 'Beren Yarke', grade: 8 },
+            // Grade 10
+            'daryna.maslova': { name: 'Maslova Daryna', grade: 10 },
+            'roni.yavuz': { name: 'Yavuz Roni Burak', grade: 10 }
+        };
+
+        // Access keys system
+        const accessKeys = {
+            // 8 Unique Teacher keys
+            'TCH-MTH-2025-A1': { role: 'teacher', name: 'Math Teacher' },
+            'TCH-SCI-2025-B2': { role: 'teacher', name: 'Science Teacher' },
+            'TCH-ENG-2025-C3': { role: 'teacher', name: 'English Teacher' },
+            'TCH-MNE-2025-D4': { role: 'teacher', name: 'Montenegrin Teacher' },
+            'TCH-ART-2025-E5': { role: 'teacher', name: 'Art Teacher' },
+            'TCH-HIS-2025-F6': { role: 'teacher', name: 'History Teacher' },
+            'TCH-GEO-2025-G7': { role: 'teacher', name: 'Geography Teacher' },
+            'TCH-ITE-2025-H8': { role: 'teacher', name: 'IT Teacher' },
+            
+            // Unique Parent keys - Grade 1
+            'PAR-VIK-KER-G1': { role: 'parent', studentId: 'viktoria.kerova' },
+            'PAR-BER-YUR-G1': { role: 'parent', studentId: 'berfin.yurdutek' },
+            'PAR-ASI-ARU-G1': { role: 'parent', studentId: 'asia.arutiunian' },
+            'PAR-VLA-GAG-G1': { role: 'parent', studentId: 'vladislav.gagarskii' },
+            'PAR-ZLA-KOS-G1': { role: 'parent', studentId: 'zlatan.koshelev' },
+            
+            // Unique Parent keys - Grade 2
+            'PAR-GAB-ISR-G2': { role: 'parent', studentId: 'gabrielle.israeli' },
+            
+            // Unique Parent keys - Grade 3
+            'PAR-ART-SAV-G3': { role: 'parent', studentId: 'artem.savvin' },
+            'PAR-MAX-SMI-G3': { role: 'parent', studentId: 'maksim.smirnov' },
+            'PAR-MEL-BOD-G3': { role: 'parent', studentId: 'melissa.bodina' },
+            'PAR-MYR-POG-G3': { role: 'parent', studentId: 'myroslava.pogiba' },
+            'PAR-RAD-KOS-G3': { role: 'parent', studentId: 'radomir.koshelev' },
+            'PAR-VAR-ANT-G3': { role: 'parent', studentId: 'varvara.antipina' },
+            
+            // Unique Parent keys - Grade 4
+            'PAR-ARS-ERE-G4': { role: 'parent', studentId: 'arsenii.eremin' },
+            'PAR-STA-POG-G4': { role: 'parent', studentId: 'stanislav.pogiba' },
+            'PAR-YEL-KER-G4': { role: 'parent', studentId: 'yelizaveta.kerova' },
+            
+            // Unique Parent keys - Grade 8
+            'PAR-AND-MOI-G8': { role: 'parent', studentId: 'andreyi.moisiienko' },
+            'PAR-MIL-SMI-G8': { role: 'parent', studentId: 'milana.smirnova' },
+            'PAR-ALE-MAE-G8': { role: 'parent', studentId: 'alexandra.maeva' },
+            'PAR-BER-YAR-G8': { role: 'parent', studentId: 'beren.yarke' },
+            
+            // Unique Parent keys - Grade 10
+            'PAR-DAR-MAS-10': { role: 'parent', studentId: 'daryna.maslova' },
+            'PAR-RON-YAV-10': { role: 'parent', studentId: 'roni.yavuz' }
+        };
+
+        let currentUser = null;
+        let currentGradingSession = null;
+
+        // Initialize app
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('classEntryDate').valueAsDate = new Date();
+            document.getElementById('gradeDate').valueAsDate = new Date();
+            
+            // Login
+            document.getElementById('loginForm').addEventListener('submit', handleLogin);
+            
+            // Logout
+            document.getElementById('logoutTeacher').addEventListener('click', handleLogout);
+            document.getElementById('logoutParent').addEventListener('click', handleLogout);
+            
+            // Teacher tabs
+            document.getElementById('lessonTab').addEventListener('click', () => switchTeacherTab('lesson'));
+            document.getElementById('gradesTab').addEventListener('click', () => switchTeacherTab('grades'));
+            
+            // Parent tabs
+            document.getElementById('parentLessonTab').addEventListener('click', () => switchParentTab('lesson'));
+            document.getElementById('parentGradesTab').addEventListener('click', () => switchParentTab('grades'));
+            
+            // Add class entry
+            document.getElementById('addClassEntryForm').addEventListener('submit', handleAddClassEntry);
+            
+            // Add subject button
+            document.getElementById('addSubjectBtn').addEventListener('click', addSubjectEntry);
+            
+            // Grade filter
+            document.getElementById('viewGradeFilter').addEventListener('change', renderTeacherEntries);
+            
+            // Grade journal
+            document.getElementById('gradeJournalGrade').addEventListener('change', handleGradeSelect);
+            document.getElementById('startGradeEntry').addEventListener('click', startGradeEntry);
+            document.getElementById('saveGrades').addEventListener('click', saveGrades);
+            
+            // Clear data button
+            document.getElementById('clearDataBtn').addEventListener('click', clearAllData);
+        });
+
+        function clearAllData() {
+            if (confirm('Are you sure you want to delete ALL data? This cannot be undone!')) {
+                if (confirm('This will delete all lessons, homework, and grades. Are you ABSOLUTELY sure?')) {
+                    localStorage.removeItem('class_entries');
+                    localStorage.removeItem('student_grades');
+                    alert('All data has been cleared!');
+                    location.reload();
+                }
+            }
+        }
+
+        function switchTeacherTab(tab) {
+            const lessonTab = document.getElementById('lessonTab');
+            const gradesTab = document.getElementById('gradesTab');
+            const lessonContent = document.getElementById('lessonTabContent');
+            const gradesContent = document.getElementById('gradesTabContent');
+            
+            if (tab === 'lesson') {
+                lessonTab.classList.add('border-indigo-500', 'text-indigo-600');
+                lessonTab.classList.remove('border-transparent', 'text-gray-500');
+                gradesTab.classList.remove('border-indigo-500', 'text-indigo-600');
+                gradesTab.classList.add('border-transparent', 'text-gray-500');
+                lessonContent.classList.remove('hidden');
+                gradesContent.classList.add('hidden');
+            } else {
+                gradesTab.classList.add('border-indigo-500', 'text-indigo-600');
+                gradesTab.classList.remove('border-transparent', 'text-gray-500');
+                lessonTab.classList.remove('border-indigo-500', 'text-indigo-600');
+                lessonTab.classList.add('border-transparent', 'text-gray-500');
+                gradesContent.classList.remove('hidden');
+                lessonContent.classList.add('hidden');
+            }
+        }
+
+        function switchParentTab(tab) {
+            const lessonTab = document.getElementById('parentLessonTab');
+            const gradesTab = document.getElementById('parentGradesTab');
+            const lessonContent = document.getElementById('parentLessonTabContent');
+            const gradesContent = document.getElementById('parentGradesTabContent');
+            
+            if (tab === 'lesson') {
+                lessonTab.classList.add('border-indigo-500', 'text-indigo-600');
+                lessonTab.classList.remove('border-transparent', 'text-gray-500');
+                gradesTab.classList.remove('border-indigo-500', 'text-indigo-600');
+                gradesTab.classList.add('border-transparent', 'text-gray-500');
+                lessonContent.classList.remove('hidden');
+                gradesContent.classList.add('hidden');
+            } else {
+                gradesTab.classList.add('border-indigo-500', 'text-indigo-600');
+                gradesTab.classList.remove('border-transparent', 'text-gray-500');
+                lessonTab.classList.remove('border-indigo-500', 'text-indigo-600');
+                lessonTab.classList.add('border-transparent', 'text-gray-500');
+                gradesContent.classList.remove('hidden');
+                lessonContent.classList.add('hidden');
+            }
+        }
+
+        function addSubjectEntry() {
+            const container = document.getElementById('subjectEntriesContainer');
+            const newEntry = document.createElement('div');
+            newEntry.className = 'subject-entry border border-gray-200 rounded-lg p-4 relative';
+            newEntry.innerHTML = `
+                <button type="button" class="absolute top-2 right-2 text-red-500 hover:text-red-700" onclick="this.parentElement.remove()">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+                <div class="grid grid-cols-1 gap-3">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Subject</label>
+                        <select class="subject-name w-full px-3 py-2 border border-gray-300 rounded-lg" required>
+                            <option value="">Select Subject</option>
+                            <option value="Math">Math</option>
+                            <option value="Science">Science</option>
+                            <option value="English">English</option>
+                            <option value="Montenegrin">Montenegrin</option>
+                            <option value="IT">IT</option>
+                            <option value="Art">Art</option>
+                            <option value="History">History</option>
+                            <option value="Geography">Geography</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Lesson Topic</label>
+                        <input type="text" class="subject-topic w-full px-3 py-2 border border-gray-300 rounded-lg" 
+                            placeholder="Quadratic equations" required>
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Homework</label>
+                        <input type="text" class="subject-homework w-full px-3 py-2 border border-gray-300 rounded-lg" 
+                            placeholder="Pages 45-47">
+                    </div>
+                </div>
+            `;
+            container.appendChild(newEntry);
+        }
+
+        function handleLogin(e) {
+            e.preventDefault();
+            const key = document.getElementById('accessKey').value.trim().toUpperCase();
+            const loginError = document.getElementById('loginError');
+            
+            const user = accessKeys[key];
+            if (user) {
+                currentUser = { key, ...user };
+                loginError.classList.add('hidden');
+                showDashboard(user.role);
+            } else {
+                loginError.classList.remove('hidden');
+            }
+        }
+
+        function handleLogout() {
+            currentUser = null;
+            document.getElementById('loginScreen').classList.remove('hidden');
+            document.getElementById('teacherDashboard').classList.add('hidden');
+            document.getElementById('parentDashboard').classList.add('hidden');
+            document.getElementById('accessKey').value = '';
+        }
+
+        async function showDashboard(role) {
+            const loading = document.getElementById('loadingIndicator');
+            loading.classList.remove('hidden');
+            document.getElementById('loginScreen').classList.add('hidden');
+            
+            try {
+                if (role === 'teacher') {
+                    document.getElementById('teacherDashboard').classList.remove('hidden');
+                    await renderTeacherEntries();
+                } else if (role === 'parent') {
+                    document.getElementById('parentDashboard').classList.remove('hidden');
+                    const studentId = currentUser.studentId;
+                    const student = students[studentId];
+                    document.getElementById('studentName').textContent = `${student.name} - Grade ${student.grade}`;
+                    await renderParentEntries(studentId);
+                    await renderParentGrades(studentId);
+                }
+            } finally {
+                loading.classList.add('hidden');
+            }
+        }
+
+        async function handleAddClassEntry(e) {
+            e.preventDefault();
+            
+            const date = document.getElementById('classEntryDate').value;
+            const grade = document.getElementById('classGrade').value;
+            
+            const subjectEntries = document.querySelectorAll('.subject-entry');
+            const subjects = [];
+            
+            subjectEntries.forEach(entry => {
+                const name = entry.querySelector('.subject-name').value;
+                const topic = entry.querySelector('.subject-topic').value;
+                const homework = entry.querySelector('.subject-homework').value;
+                
+                if (name && topic) {
+                    subjects.push({ name, topic, homework });
+                }
+            });
+            
+            if (subjects.length === 0) {
+                alert('Please add at least one subject');
+                return;
+            }
+            
+            const classEntry = {
+                id: Date.now().toString(),
+                date,
+                grade,
+                subjects,
+                timestamp: new Date().toISOString()
+            };
+
+            try {
+                await saveClassEntry(classEntry);
+                
+                document.getElementById('addClassEntryForm').reset();
+                document.getElementById('classEntryDate').valueAsDate = new Date();
+                
+                document.getElementById('subjectEntriesContainer').innerHTML = `
+                    <div class="subject-entry border border-gray-200 rounded-lg p-4">
+                        <div class="grid grid-cols-1 gap-3">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Subject</label>
+                                <select class="subject-name w-full px-3 py-2 border border-gray-300 rounded-lg" required>
+                                    <option value="">Select Subject</option>
+                                    <option value="Math">Math</option>
+                                    <option value="Science">Science</option>
+                                    <option value="English">English</option>
+                                    <option value="Montenegrin">Montenegrin</option>
+                                    <option value="IT">IT</option>
+                                    <option value="Art">Art</option>
+                                    <option value="History">History</option>
+                                    <option value="Geography">Geography</option>
+                                </select>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Lesson Topic</label>
+                                <input type="text" class="subject-topic w-full px-3 py-2 border border-gray-300 rounded-lg" 
+                                    placeholder="Quadratic equations" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-1">Homework</label>
+                                <input type="text" class="subject-homework w-full px-3 py-2 border border-gray-300 rounded-lg" 
+                                    placeholder="Pages 45-47">
+                            </div>
+                        </div>
+                    </div>
+                `;
+                
+                await renderTeacherEntries();
+                alert('Entry saved successfully!');
+            } catch (error) {
+                console.error('Error saving entry:', error);
+                alert('Error saving entry: ' + error.message);
+            }
+        }
+
+        async function getClassEntries() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('class_entries')
+                    .select('*')
+                    .order('date', { ascending: false });
+                
+                if (error) throw error;
+                return data || [];
+            } catch (error) {
+                console.error('Error fetching entries:', error);
+                return [];
+            }
+        }
+
+        async function saveClassEntry(entry) {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('class_entries')
+                    .insert([{
+                        date: entry.date,
+                        grade: entry.grade,
+                        subjects: entry.subjects
+                    }])
+                    .select();
+                
+                if (error) throw error;
+                return data;
+            } catch (error) {
+                console.error('Save error:', error);
+                throw new Error('Failed to save: ' + (error.message || 'Unknown error'));
+            }
+        }
+
+        async function deleteClassEntry(entryId) {
+            if (!confirm('Delete this entry?')) return;
+            
+            try {
+                const { error } = await supabaseClient
+                    .from('class_entries')
+                    .delete()
+                    .eq('id', entryId);
+                
+                if (error) throw error;
+                await renderTeacherEntries();
+            } catch (error) {
+                alert('Error deleting: ' + error.message);
+            }
+        }
+
+        async function renderTeacherEntries() {
+            const entries = await getClassEntries();
+            const container = document.getElementById('teacherEntriesList');
+            const gradeFilter = document.getElementById('viewGradeFilter').value;
+            
+            let filtered = entries;
+            if (gradeFilter) {
+                filtered = entries.filter(e => e.grade === gradeFilter);
+            }
+            
+            if (filtered.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-center py-8">No entries yet</p>';
+                return;
+            }
+            
+            const sorted = filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            container.innerHTML = sorted.map(entry => `
+                <div class="entry-card border border-gray-200 rounded-lg p-5 shadow-sm hover:shadow-lg">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <div class="flex items-center gap-3 mb-2">
+                                <span class="text-lg font-semibold text-gray-700">${formatDate(entry.date)}</span>
+                                <span class="bg-indigo-100 text-indigo-800 px-3 py-1 rounded-full text-sm font-medium">
+                                    Grade ${entry.grade}
+                                </span>
+                            </div>
+                        </div>
+                        <button onclick="deleteClassEntry('${entry.id}')" 
+                            class="text-red-500 hover:text-red-700 p-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                            </svg>
+                        </button>
+                    </div>
+                    
+                    <div class="space-y-3">
+                        ${entry.subjects.map(subject => `
+                            <div class="bg-gray-50 rounded-lg p-3">
+                                <div class="flex items-start gap-2">
+                                    <span class="bg-blue-500 text-white px-2 py-1 rounded text-xs font-semibold">
+                                        ${subject.name}
+                                    </span>
+                                </div>
+                                <p class="text-gray-800 font-medium mt-2">${subject.topic}</p>
+                                ${subject.homework ? `
+                                    <p class="text-sm text-gray-600 mt-1">
+                                        <span class="font-medium">Homework:</span> ${subject.homework}
+                                    </p>
+                                ` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function handleGradeSelect() {
+            const grade = document.getElementById('gradeJournalGrade').value;
+            const section = document.getElementById('gradeEntrySection');
+            
+            if (grade) {
+                section.classList.remove('hidden');
+                renderGradeJournal(grade);
+            } else {
+                section.classList.add('hidden');
+            }
+        }
+
+        function startGradeEntry() {
+            const grade = document.getElementById('gradeJournalGrade').value;
+            const date = document.getElementById('gradeDate').value;
+            const subject = document.getElementById('gradeSubject').value;
+            
+            if (!date || !subject) {
+                alert('Please select date and enter subject');
+                return;
+            }
+            
+            currentGradingSession = { grade, date, subject };
+            
+            const studentsInGrade = Object.entries(students)
+                .filter(([id, data]) => data.grade.toString() === grade)
+                .sort((a, b) => a[1].name.localeCompare(b[1].name));
+            
+            document.getElementById('gradingInfo').textContent = 
+                `Grade ${grade} - ${subject} - ${formatDate(date)}`;
+            
+            const tbody = document.getElementById('gradeInputTableBody');
+            tbody.innerHTML = studentsInGrade.map(([id, data]) => `
+                <tr class="student-row">
+                    <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                        ${data.name}
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">
+                        <select class="grade-input px-3 py-1 border border-gray-300 rounded" data-student="${id}">
+                            <option value="">-</option>
+                            <option value="A">A (Excellent)</option>
+                            <option value="B">B (Good)</option>
+                            <option value="C">C (Satisfactory)</option>
+                            <option value="D">D (Needs Improvement)</option>
+                        </select>
+                    </td>
+                </tr>
+            `).join('');
+            
+            document.getElementById('gradeInputTable').classList.remove('hidden');
+        }
+
+        async function saveGrades() {
+            const gradeInputs = document.querySelectorAll('.grade-input');
+            const grades = [];
+            
+            gradeInputs.forEach(input => {
+                const studentId = input.dataset.student;
+                const gradeValue = input.value;
+                
+                if (gradeValue) {
+                    grades.push({
+                        studentId,
+                        grade: gradeValue,
+                        subject: currentGradingSession.subject,
+                        date: currentGradingSession.date,
+                        timestamp: new Date().toISOString()
+                    });
+                }
+            });
+            
+            if (grades.length === 0) {
+                alert('No grades entered');
+                return;
+            }
+            
+            try {
+                await saveGradesData(grades);
+                
+                alert(`${grades.length} grades saved successfully!`);
+                document.getElementById('gradeInputTable').classList.add('hidden');
+                document.getElementById('gradeDate').value = '';
+                document.getElementById('gradeSubject').value = '';
+                
+                await renderGradeJournal(currentGradingSession.grade);
+            } catch (error) {
+                console.error('Error saving grades:', error);
+                alert('Error saving grades: ' + error.message);
+            }
+        }
+
+        async function getGrades() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('student_grades')
+                    .select('*')
+                    .order('date', { ascending: false });
+                
+                if (error) throw error;
+                return data || [];
+            } catch (error) {
+                console.error('Error fetching grades:', error);
+                return [];
+            }
+        }
+
+        async function saveGradesData(grades) {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('student_grades')
+                    .insert(grades.map(g => ({
+                        student_id: g.studentId,
+                        grade: g.grade,
+                        subject: g.subject,
+                        date: g.date
+                    })))
+                    .select();
+                
+                if (error) throw error;
+                return data;
+            } catch (error) {
+                console.error('Save grades error:', error);
+                throw new Error('Failed to save grades: ' + (error.message || 'Unknown error'));
+            }
+        }
+
+        async function renderGradeJournal(grade) {
+            const allGrades = await getGrades();
+            const studentsInGrade = Object.entries(students)
+                .filter(([id, data]) => data.grade.toString() === grade)
+                .sort((a, b) => a[1].name.localeCompare(b[1].name));
+            
+            const container = document.getElementById('gradeJournalView');
+            
+            if (studentsInGrade.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-center py-4">No students in this grade</p>';
+                return;
+            }
+            
+            const table = document.createElement('table');
+            table.className = 'w-full';
+            
+            let html = `
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-4 py-3 text-left text-xs font-medium text-gray-500 uppercase">Student</th>
+                        <th class="px-4 py-3 text-center text-xs font-medium text-gray-500 uppercase">Avg</th>
+                    </tr>
+                </thead>
+                <tbody class="divide-y divide-gray-200">
+            `;
+            
+            studentsInGrade.forEach(([id, data]) => {
+                const studentGrades = allGrades.filter(g => g.studentId === id);
+                const avg = studentGrades.length > 0 
+                    ? (studentGrades.reduce((sum, g) => sum + parseInt(g.grade), 0) / studentGrades.length).toFixed(1)
+                    : '-';
+                
+                const gradesList = studentGrades
+                    .sort((a, b) => new Date(b.date) - new Date(a.date))
+                    .slice(0, 10)
+                    .map(g => `<span class="inline-block px-2 py-1 bg-blue-100 text-blue-800 rounded text-xs mr-1 mb-1">${g.grade} (${g.subject})</span>`)
+                    .join('');
+                
+                html += `
+                    <tr class="student-row">
+                        <td class="px-4 py-3">
+                            <div class="font-medium text-gray-900">${data.name}</div>
+                            <div class="mt-1">${gradesList || '<span class="text-gray-400 text-sm">No grades yet</span>'}</div>
+                        </td>
+                        <td class="px-4 py-3 text-center">
+                            <span class="text-lg font-bold ${avg !== '-' ? 'text-green-600' : 'text-gray-400'}">${avg}</span>
+                        </td>
+                    </tr>
+                `;
+            });
+            
+            html += '</tbody>';
+            table.innerHTML = html;
+            container.innerHTML = '';
+            container.appendChild(table);
+        }
+
+        async function renderParentEntries(studentId) {
+            const allEntries = await getClassEntries();
+            const student = students[studentId];
+            const studentGrade = student.grade.toString();
+            
+            const entries = allEntries.filter(e => e.grade === studentGrade);
+            
+            const container = document.getElementById('parentEntriesList');
+            
+            let totalSubjects = 0;
+            let totalHomework = 0;
+            entries.forEach(entry => {
+                totalSubjects += entry.subjects.length;
+                totalHomework += entry.subjects.filter(s => s.homework).length;
+            });
+            
+            document.getElementById('totalDays').textContent = entries.length;
+            document.getElementById('totalSubjects').textContent = totalSubjects;
+            document.getElementById('totalHomework').textContent = totalHomework;
+            
+            if (entries.length === 0) {
+                container.innerHTML = '<p class="text-gray-500 text-center py-8">No entries yet</p>';
+                return;
+            }
+            
+            const sorted = entries.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            container.innerHTML = sorted.map(entry => `
+                <div class="entry-card border border-gray-200 rounded-lg p-5 shadow-sm hover:shadow-lg">
+                    <div class="mb-4">
+                        <h3 class="text-lg font-semibold text-gray-800">${formatDate(entry.date)}</h3>
+                    </div>
+                    
+                    <div class="space-y-3">
+                        ${entry.subjects.map(subject => `
+                            <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4">
+                                <div class="flex items-start gap-2 mb-2">
+                                    <span class="bg-blue-600 text-white px-3 py-1 rounded-full text-sm font-semibold">
+                                        ${subject.name}
+                                    </span>
+                                </div>
+                                <p class="text-gray-800 font-medium text-base">${subject.topic}</p>
+                                ${subject.homework ? `
+                                    <div class="mt-3 bg-white rounded-md p-3 border-l-4 border-green-500">
+                                        <p class="text-sm text-gray-700">
+                                            <span class="font-semibold text-green-700">📚 Homework:</span> ${subject.homework}
+                                        </p>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        `).join('')}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        async function renderParentGrades(studentId) {
+            const allGrades = await getGrades();
+            const studentGrades = allGrades.filter(g => g.studentId === studentId);
+            
+            const container = document.getElementById('parentGradesList');
+            
+            if (studentGrades.length === 0) {
+                document.getElementById('parentAvgGrade').textContent = '-';
+                document.getElementById('parentTotalGrades').textContent = '0';
+                container.innerHTML = '<p class="text-gray-500 text-center py-8">No grades yet</p>';
+                return;
+            }
+            
+            const avg = (studentGrades.reduce((sum, g) => sum + parseInt(g.grade), 0) / studentGrades.length).toFixed(1);
+            document.getElementById('parentAvgGrade').textContent = avg;
+            document.getElementById('parentTotalGrades').textContent = studentGrades.length;
+            
+            const sorted = studentGrades.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            const gradesByDate = {};
+            sorted.forEach(g => {
+                if (!gradesByDate[g.date]) {
+                    gradesByDate[g.date] = [];
+                }
+                gradesByDate[g.date].push(g);
+            });
+            
+            container.innerHTML = Object.entries(gradesByDate)
+                .map(([date, grades]) => `
+                    <div class="mb-4 border border-gray-200 rounded-lg p-4">
+                        <h4 class="font-semibold text-gray-800 mb-3">${formatDate(date)}</h4>
+                        <div class="space-y-2">
+                            ${grades.map(g => `
+                                <div class="flex justify-between items-center bg-gray-50 rounded px-3 py-2">
+                                    <span class="text-gray-700">${g.subject}</span>
+                                    <span class="font-bold text-lg ${
+                                        g.grade === '5' ? 'text-green-600' :
+                                        g.grade === '4' ? 'text-blue-600' :
+                                        g.grade === '3' ? 'text-yellow-600' :
+                                        'text-red-600'
+                                    }">${g.grade}</span>
+                                </div>
+                            `).join('')}
+                        </div>
+                    </div>
+                `).join('');
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('en-US', { 
+                weekday: 'long',
+                day: 'numeric', 
+                month: 'long', 
+                year: 'numeric' 
+            });
+        }
+    </script>
+</body>
+</html>
