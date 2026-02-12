@@ -1007,7 +1007,7 @@
             `;
             
             studentsInGrade.forEach(([id, data]) => {
-                const studentGrades = allGrades.filter(g => g.studentId === id);
+                const studentGrades = allGrades.filter(g => g.student_id === id);
                 const avg = studentGrades.length > 0 
                     ? (studentGrades.reduce((sum, g) => sum + parseInt(g.grade), 0) / studentGrades.length).toFixed(1)
                     : '-';
@@ -1095,7 +1095,7 @@
 
         async function renderParentGrades(studentId) {
             const allGrades = await getGrades();
-            const studentGrades = allGrades.filter(g => g.studentId === studentId);
+            const studentGrades = allGrades.filter(g => g.student_id === studentId);
             
             const container = document.getElementById('parentGradesList');
             
