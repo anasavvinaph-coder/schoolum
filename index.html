@@ -113,13 +113,19 @@
         .hero p { font-size: 22px; margin-bottom: 40px; font-weight: 300; }
 
         /* PROGRAMS & STAFF GRID */
-        .programs { background-color: var(--bg-light); }
-        .programs-grid {
-            display: grid; grid-template-columns: repeat(4, 1fr), minmax(300px, 1fr)); gap: 30px;
-        }
-        .program-card {
-            background: white; padding: 40px 30px; border-bottom: 4px solid var(--accent-green);
-            transition: 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+.programs { background-color: var(--bg-light); }
+.programs-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px;
+}
+.program-card {
+    background: white; padding: 40px 30px; border-bottom: 4px solid var(--accent-green);
+    transition: 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.05);
+}
+.program-card img {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+}
         }
         .program-card:hover { transform: translateY(-10px); border-bottom-color: var(--primary-blue); }
         .program-card h3 { font-size: 24px; color: var(--primary-blue); margin-bottom: 8px; }
