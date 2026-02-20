@@ -758,7 +758,7 @@
                             style="width: 100%; height: 100%; object-fit: cover; object-position: center 20%;"
                             alt="Principal">
                     </div>
-                    <h3 data-key="staff.s1_name">Maria Ivanova</h3>
+                    <h3 data-key="staff.s1_name">Irina Maslova</h3>
                     <p style="color: var(--accent-green); font-weight: bold;" data-key="staff.s1_role">Principal</p>
                 </div>
                 <div class="program-card" style="text-align: center; padding-top: 30px;">
@@ -810,12 +810,13 @@
                 <div class="news-card"
                     style="background: var(--bg-light); padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); transition: transform 0.3s ease;">
                     <p style="color: var(--accent-green); font-weight: bold; font-size: 14px; margin-bottom: 10px;"
-                        data-key="news.n1_date">Oct 12, 2023</p>
+                        data-key="news.n1_date">Feb 15, 2024</p>
                     <h4 style="margin-bottom: 12px; color: var(--primary-blue); font-size: 20px;"
-                        data-key="news.n1_title">New Science Lab Opening</h4>
+                        data-key="news.n1_title">A Journey Through Africa!</h4>
                     <p style="font-size: 15px; color: var(--text-light); line-height: 1.6;" data-key="news.n1_desc">We
-                        are excited to announce the opening of our state-of-the-art science laboratory next week,
-                        providing hands-on learning experiences.</p>
+                        had a special guest! A father of one of our Grade 3 students shared his incredible travels
+                        across Africa. With a captivating presentation, he took the children on an unforgettable
+                        adventure that left them absolutely delighted and inspired.</p>
                 </div>
                 <div class="news-card"
                     style="background: var(--bg-light); padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); transition: transform 0.3s ease;">
@@ -925,16 +926,20 @@
                 document.querySelector('[data-key="hero.title"]').innerHTML = translationsData.hero.title.replace('\n', '<br>');
             }
 
-            // Mobile Menu Toggle
-            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
-            const mobileNav = document.getElementById('mobileNav');
-            const mobileOverlay = document.getElementById('mobileOverlay');
+            localStorage.setItem('school_lang', currentLang);
+        }
 
-            function toggleMenu() {
-                mobileNav.classList.toggle('active');
-                mobileOverlay.classList.toggle('active');
-            }
+        // Mobile Menu Toggle logic - Outside of updateContent to run only once
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const mobileNav = document.getElementById('mobileNav');
+        const mobileOverlay = document.getElementById('mobileOverlay');
 
+        function toggleMenu() {
+            mobileNav.classList.toggle('active');
+            mobileOverlay.classList.toggle('active');
+        }
+
+        if (mobileMenuBtn && mobileNav && mobileOverlay) {
             mobileMenuBtn.addEventListener('click', toggleMenu);
             mobileOverlay.addEventListener('click', toggleMenu);
 
@@ -942,8 +947,6 @@
             mobileNav.querySelectorAll('a').forEach(link => {
                 link.addEventListener('click', toggleMenu);
             });
-
-            localStorage.setItem('school_lang', currentLang);
         }
 
         document.querySelectorAll('.lang-btn').forEach(btn => {
