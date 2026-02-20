@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -7,8 +8,8 @@
     <style>
         /* --- STYLE VARIABLES --- */
         :root {
-            --primary-blue: #0A3B66;  
-            --accent-green: #8DA558;  
+            --primary-blue: #0A3B66;
+            --accent-green: #8DA558;
             --text-dark: #1F2937;
             --text-light: #6B7280;
             --bg-light: #F9FAFB;
@@ -16,8 +17,12 @@
             --font-main: 'Helvetica Neue', Helvetica, Arial, sans-serif;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
         body {
             font-family: var(--font-main);
             color: var(--text-dark);
@@ -26,172 +31,442 @@
             scroll-behavior: smooth;
         }
 
-        a { text-decoration: none; color: inherit; transition: 0.3s; }
-        img { max-width: 100%; display: block; }
-        ul { list-style: none; }
+        a {
+            text-decoration: none;
+            color: inherit;
+            transition: 0.3s;
+        }
 
-        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        img {
+            max-width: 100%;
+            display: block;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
 
         /* Кнопки */
         .btn {
-            display: inline-block; padding: 14px 32px; font-size: 16px; font-weight: 600;
-            border-radius: 4px; cursor: pointer; border: none; transition: all 0.3s ease;
-            text-transform: uppercase; letter-spacing: 0.5px;
+            display: inline-block;
+            padding: 14px 32px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 4px;
+            cursor: pointer;
+            border: none;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
         }
-        .btn-primary { background-color: var(--primary-blue); color: #fff; }
-        .btn-primary:hover { background-color: var(--accent-green); transform: translateY(-2px); }
-        .btn-outline { border: 2px solid var(--white); color: var(--white); background: transparent; }
-        .btn-outline:hover { background: var(--white); color: var(--primary-blue); }
+
+        .btn-primary {
+            background-color: var(--primary-blue);
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background-color: var(--accent-green);
+            transform: translateY(-2px);
+        }
+
+        .btn-outline {
+            border: 2px solid var(--white);
+            color: var(--white);
+            background: transparent;
+        }
+
+        .btn-outline:hover {
+            background: var(--white);
+            color: var(--primary-blue);
+        }
 
         /* Заголовки */
         .section-title {
-            font-size: 42px; font-weight: 700; color: var(--primary-blue);
-            margin-bottom: 20px; text-align: center;
-        }
-        .section-subtitle {
-            font-size: 18px; color: var(--text-light); max-width: 700px;
-            margin: 0 auto 60px; text-align: center;
+            font-size: 42px;
+            font-weight: 700;
+            color: var(--primary-blue);
+            margin-bottom: 20px;
+            text-align: center;
         }
 
-        section { padding: 100px 0; }
+        .section-subtitle {
+            font-size: 18px;
+            color: var(--text-light);
+            max-width: 700px;
+            margin: 0 auto 60px;
+            text-align: center;
+        }
+
+        section {
+            padding: 100px 0;
+        }
 
         /* HEADER */
         header {
-            position: fixed; top: 0; left: 0; width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
             background: #ffffff;
-            box-shadow: 0 2px 15px rgba(0,0,0,0.05);
-            z-index: 1000; padding: 15px 0;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+            z-index: 1000;
+            padding: 15px 0;
         }
-        .nav-wrapper { display: flex; justify-content: space-between; align-items: center; }
-        
-        .logo-container { display: flex; align-items: center; max-height: 80px; }
-        .logo-img { height: 70px; width: auto; object-fit: contain; }
 
-        .nav-links { display: flex; gap: 25px; } 
-        
-        .nav-links a {
-            font-size: 16px; font-weight: 800; text-transform: uppercase;
-            color: var(--primary-blue); letter-spacing: 0.5px; cursor: pointer;
+        .nav-wrapper {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
-        .nav-links a:hover { color: var(--accent-green); }
-        
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            max-height: 80px;
+        }
+
+        .logo-img {
+            height: 70px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 25px;
+        }
+
+        .nav-links a {
+            font-size: 16px;
+            font-weight: 800;
+            text-transform: uppercase;
+            color: var(--primary-blue);
+            letter-spacing: 0.5px;
+            cursor: pointer;
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-green);
+        }
+
         /* ОБНОВЛЕННЫЙ СТИЛЬ КНОПКИ ПОРТАЛА */
         .portal-btn {
-            font-size: 14px; 
-            font-weight: 700; 
+            font-size: 14px;
+            font-weight: 700;
             padding: 10px 24px;
             border-radius: 30px;
             margin-left: 20px;
-            
+
             /* Полупрозрачный фон (синий с прозрачностью 10%) */
-            background-color: rgba(10, 59, 102, 0.1); 
+            background-color: rgba(10, 59, 102, 0.1);
             color: var(--primary-blue);
-            
+
             transition: all 0.3s ease;
         }
-        .portal-btn:hover { 
-            background: var(--primary-blue); 
-            color: white; 
+
+        .portal-btn:hover {
+            background: var(--primary-blue);
+            color: white;
         }
 
         /* HERO */
         .hero {
-            height: 100vh; min-height: 600px; position: relative;
-            display: flex; align-items: center; text-align: left; color: white;
+            height: 100vh;
+            min-height: 600px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            text-align: left;
+            color: white;
         }
+
         .hero-bg {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background-image: url('hero.jpg'); 
-            background-size: cover; background-position: center; z-index: -1;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-image: url('hero.jpg');
+            background-size: cover;
+            background-position: center;
+            z-index: -1;
         }
+
         .hero-overlay {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            background: linear-gradient(rgba(10, 59, 102, 0.6), rgba(10, 59, 102, 0.3)); z-index: 0;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(rgba(10, 59, 102, 0.6), rgba(10, 59, 102, 0.3));
+            z-index: 0;
         }
-        .hero-content { position: relative; z-index: 1; width: 100%; padding: 20px; }
-        .hero h1 { font-size: 64px; font-weight: 800; margin-bottom: 20px; line-height: 1.1; }
-        .hero p { font-size: 22px; margin-bottom: 40px; font-weight: 300; }
+
+        .hero-content {
+            position: relative;
+            z-index: 1;
+            width: 100%;
+            padding: 20px;
+        }
+
+        .hero h1 {
+            font-size: 64px;
+            font-weight: 800;
+            margin-bottom: 20px;
+            line-height: 1.1;
+        }
+
+        .hero p {
+            font-size: 22px;
+            margin-bottom: 40px;
+            font-weight: 300;
+        }
 
         /* PROGRAMS & STAFF GRID */
-.programs { background-color: var(--bg-light); }
-.programs-grid {
-    display: grid; grid-template-columns: repeat(4, 1fr); gap: 30px;
-}
-.program-card {
-    background: white; padding: 0; border-bottom: 4px solid var(--accent-green);
-    transition: 0.3s; box-shadow: 0 5px 15px rgba(0,0,0,0.05);
-    display: flex; flex-direction: column; align-items: center; text-align: center;
-}
-
-.program-card img {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
-    margin-bottom: 20px;
-}
-
-.program-card h3 {
-    margin: 0 0 20px 0;
-    padding: 0 30px;
-}
-
-.program-card p {
-    margin: 0;
-    padding: 0 30px 30px 30px;
-}
-}
-.program-card img {
-    width: 100%;
-    height: 180px;
-    object-fit: cover;
-}
+        .programs {
+            background-color: var(--bg-light);
         }
-        .program-card:hover { transform: translateY(-10px); border-bottom-color: var(--primary-blue); }
-        .program-card h3 { font-size: 24px; color: var(--primary-blue); margin-bottom: 8px; }
+
+        .programs-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+        }
+
+        .program-card {
+            background: white;
+            padding: 0;
+            border-bottom: 4px solid var(--accent-green);
+            transition: 0.3s;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .program-card img {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            margin-bottom: 20px;
+        }
+
+        .program-card h3 {
+            margin: 0 0 20px 0;
+            padding: 0 30px;
+        }
+
+        .program-card p {
+            margin: 0;
+            padding: 0 30px 30px 30px;
+        }
+
+        .program-card:hover {
+            transform: translateY(-10px);
+            border-bottom-color: var(--primary-blue);
+        }
+
+        .program-card h3 {
+            font-size: 24px;
+            color: var(--primary-blue);
+            margin-bottom: 8px;
+        }
 
         /* SPLIT SECTIONS (About / Admissions) */
-        .split-section { display: grid; grid-template-columns: 1fr 1fr; align-items: stretch; min-height: 600px;}
-        .split-content { padding: 80px; display: flex; flex-direction: column; justify-content: center; }
-        
-        .split-image-box {
-            background-color: #ddd; background-size: cover; background-position: center; min-height: 400px;
+        .split-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: stretch;
+            min-height: 600px;
         }
-        .split-bg-2 { background: var(--primary-blue); color: white; }
+
+        .split-content {
+            padding: 80px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .split-image-box {
+            background-color: #ddd;
+            background-size: cover;
+            background-position: center;
+            min-height: 400px;
+        }
+
+        .split-bg-2 {
+            background: var(--primary-blue);
+            color: white;
+        }
 
         /* GALLERY */
-        .gallery-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
-        .gallery-item { height: 180px; background-color: #ddd; overflow: hidden; } 
-        .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
-        .gallery-item:hover img { transform: scale(1.1); }
+        .gallery-grid {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+        }
+
+        .gallery-item {
+            height: 180px;
+            background-color: #ddd;
+            overflow: hidden;
+        }
+
+        .gallery-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.5s;
+        }
+
+        .gallery-item:hover img {
+            transform: scale(1.1);
+        }
 
         /* NEWS */
-        .news-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; }
-        .news-card { background: white; border: 1px solid #eee; }
-        .news-img { height: 200px; background: #eee; background-size: cover; background-position: center; }
-        .news-body { padding: 25px; }
-        .news-date { color: var(--accent-green); font-weight: bold; font-size: 0.9rem; }
-        .news-title { font-size: 1.2rem; margin: 10px 0; color: var(--primary-blue); }
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .news-card {
+            background: white;
+            border: 1px solid #eee;
+        }
+
+        .news-img {
+            height: 200px;
+            background: #eee;
+            background-size: cover;
+            background-position: center;
+        }
+
+        .news-body {
+            padding: 25px;
+        }
+
+        .news-date {
+            color: var(--accent-green);
+            font-weight: bold;
+            font-size: 0.9rem;
+        }
+
+        .news-title {
+            font-size: 1.2rem;
+            margin: 10px 0;
+            color: var(--primary-blue);
+        }
 
         /* FOOTER / CONTACT */
-        footer { background-color: var(--primary-blue); color: white; padding: 60px 0 20px; }
-        .footer-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 40px; margin-bottom: 40px; }
-        .footer-col h4 { color: var(--accent-green); margin-bottom: 20px; font-size: 18px; text-transform: uppercase; }
-        .footer-col ul li { margin-bottom: 10px; }
-        .footer-col a:hover { color: var(--accent-green); }
-        .copyright { border-top: 1px solid rgba(255,255,255,0.1); text-align: center; padding-top: 20px; font-size: 14px; opacity: 0.6; }
+        footer {
+            background-color: var(--primary-blue);
+            color: white;
+            padding: 60px 0 20px;
+        }
+
+        .footer-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-col h4 {
+            color: var(--accent-green);
+            margin-bottom: 20px;
+            font-size: 18px;
+            text-transform: uppercase;
+        }
+
+        .footer-col ul li {
+            margin-bottom: 10px;
+        }
+
+        .footer-col a:hover {
+            color: var(--accent-green);
+        }
+
+        .copyright {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            text-align: center;
+            padding-top: 20px;
+            font-size: 14px;
+            opacity: 0.6;
+        }
+
+        /* LANGUAGE SWITCHER */
+        .lang-switcher {
+            display: flex;
+            gap: 10px;
+            margin-right: 20px;
+        }
+
+        .lang-btn {
+            background: none;
+            border: 1px solid var(--primary-blue);
+            color: var(--primary-blue);
+            padding: 5px 10px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .lang-btn:hover,
+        .lang-btn.active {
+            background: var(--primary-blue);
+            color: white;
+        }
 
         /* MOBILE */
         @media (max-width: 992px) {
-            .nav-links { display: none; }
-            .hero h1 { font-size: 42px; }
-            .split-section { grid-template-columns: 1fr; min-height: auto; }
-            .split-content { padding: 40px 20px; }
-            .gallery-grid { grid-template-columns: repeat(2, 1fr); }
-            .news-grid { grid-template-columns: 1fr; }
-            .footer-grid { grid-template-columns: 1fr; }
+            .nav-links {
+                display: none;
+            }
+
+            .hero h1 {
+                font-size: 42px;
+            }
+
+            .split-section {
+                grid-template-columns: 1fr;
+                min-height: auto;
+            }
+
+            .split-content {
+                padding: 40px 20px;
+            }
+
+            .gallery-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .news-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .footer-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .lang-switcher {
+                margin-right: 0;
+                margin-bottom: 10px;
+            }
         }
     </style>
 </head>
+
 <body>
 
     <!-- HEADER -->
@@ -204,17 +479,22 @@
             </div>
 
             <nav class="nav-links">
-                <a href="#programs">Programs</a>
-                <a href="#admissions">Admissions</a>
-                <a href="#about">About Us</a>
-                <a href="#staff">Staff</a>
-                <a href="#gallery">Gallery</a>
-                <a href="#news">News</a>
-                <a href="#contact">Contact</a>
+                <a href="#programs" data-key="nav.programs">Programs</a>
+                <a href="#admissions" data-key="nav.admissions">Admissions</a>
+                <a href="#about" data-key="nav.about">About Us</a>
+                <a href="#staff" data-key="nav.staff">Staff</a>
+                <a href="#gallery" data-key="nav.gallery">Gallery</a>
+                <a href="#news" data-key="nav.news">News</a>
+                <a href="#contact" data-key="nav.contact">Contact</a>
             </nav>
 
+            <div class="lang-switcher">
+                <button class="lang-btn" data-lang="en">EN</button>
+                <button class="lang-btn" data-lang="mne">MNE</button>
+            </div>
+
             <!-- ОБНОВЛЕННАЯ КНОПКА -->
-            <a href="school-portal-supabase.html" class="portal-btn">School Portal</a>
+            <a href="school-portal-supabase.html" class="portal-btn" data-key="nav.portal">School Portal</a>
         </div>
     </header>
 
@@ -223,61 +503,72 @@
         <div class="hero-bg"></div>
         <div class="hero-overlay"></div>
         <div class="container hero-content">
-            <h1>Building strong foundations<br>for your child’s future.</h1>
-            <p>Welcome to International School UM. Where academic excellence meets creative freedom.</p>
+            <h1 data-key="hero.title">Building strong foundations<br>for your child’s future.</h1>
+            <p data-key="hero.subtitle">Welcome to International School UM. Where academic excellence meets creative
+                freedom.</p>
             <div style="margin-top: 30px;">
-                <a href="#admissions" class="btn btn-primary">Apply Now</a>
+                <a href="#admissions" class="btn btn-primary" data-key="hero.apply">Apply Now</a>
             </div>
         </div>
     </section>
 
     <!-- 1. PROGRAMS SECTION -->
-<section id="programs" class="programs">
-    <div class="container">
-        <h2 class="section-title">Our Programs</h2>
-        <div class="section-subtitle">A comprehensive curriculum designed for every stage of development.</div>
-        
-        <div class="programs-grid">
-            <div class="program-card">
-                <img src="3-5.png" alt="Preschool">
-                <h3>Preschool</h3>
-                <p>Age 3-5. Play-based learning that fosters curiosity, social skills, and early literacy in a nurturing environment.</p>
-            </div>
-            <div class="program-card">
-                <img src="7-11.png" alt="Primary School">
-                <h3>Primary School</h3>
-                <p>Grades 1-5. Building strong foundations in Mathematics, Science, and Languages with a focus on inquiry.</p>
-            </div>
-            <div class="program-card">
-                <img src="12-16.png" alt="Middle School">
-                <h3>Middle School</h3>
-                <p>Grades 6-9. Developing critical thinking, project-based learning, and personal responsibility.</p>
-            </div>
-            <div class="program-card">
-                <img src="17-19.png" alt="High School">
-                <h3>High School</h3>
-                <p>Grades 10-12. Rigorous university preparation, advanced sciences, and leadership opportunities.</p>
+    <section id="programs" class="programs">
+        <div class="container">
+            <h2 class="section-title" data-key="programs.title">Our Programs</h2>
+            <div class="section-subtitle" data-key="programs.subtitle">A comprehensive curriculum designed for every
+                stage of development.</div>
+
+            <div class="programs-grid">
+                <div class="program-card">
+                    <img src="3-5.png" alt="Preschool">
+                    <h3 data-key="programs.p1_title">Preschool</h3>
+                    <p data-key="programs.p1_desc">Age 3-5. Play-based learning that fosters curiosity, social skills,
+                        and early literacy in a
+                        nurturing environment.</p>
+                </div>
+                <div class="program-card">
+                    <img src="7-11.png" alt="Primary School">
+                    <h3 data-key="programs.p2_title">Primary School</h3>
+                    <p data-key="programs.p2_desc">Grades 1-5. Building strong foundations in Mathematics, Science, and
+                        Languages with a focus on
+                        inquiry.</p>
+                </div>
+                <div class="program-card">
+                    <img src="12-16.png" alt="Middle School">
+                    <h3 data-key="programs.p3_title">Middle School</h3>
+                    <p data-key="programs.p3_desc">Grades 6-9. Developing critical thinking, project-based learning, and
+                        personal responsibility.</p>
+                </div>
+                <div class="program-card">
+                    <img src="17-19.png" alt="High School">
+                    <h3 data-key="programs.p4_title">High School</h3>
+                    <p data-key="programs.p4_desc">Grades 10-12. Rigorous university preparation, advanced sciences, and
+                        leadership opportunities.</p>
+                </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 
     <!-- 2. ADMISSIONS SECTION -->
     <section id="admissions" style="padding: 0;">
         <div class="split-section">
-            <div class="split-image-box" style="background-image: url('cambridge.jpg');"></div>
+            <div class="split-image-box" style="background-image: url('cambridge.jpg');">
+            </div>
             <div class="split-content split-bg-2">
-                <h2 style="color: white; font-size: 36px; margin-bottom: 20px;">Admissions</h2>
-                <p style="color: rgba(255,255,255,0.8); margin-bottom: 30px;">
+                <h2 style="color: white; font-size: 36px; margin-bottom: 20px;" data-key="nav.admissions">Admissions
+                </h2>
+                <p style="color: rgba(255,255,255,0.8); margin-bottom: 30px;" data-key="admissions.subtitle">
                     Join the UM family today. We are currently accepting applications for the upcoming academic year.
                 </p>
                 <ol style="margin-left: 20px; color: white; margin-bottom: 30px;">
-                    <li style="margin-bottom: 10px;">Submit Online Application</li>
-                    <li style="margin-bottom: 10px;">Schedule a Campus Tour</li>
-                    <li style="margin-bottom: 10px;">Student Interview & Assessment</li>
-                    <li>Enrollment & Welcome Packet</li>
+                    <li style="margin-bottom: 10px;" data-key="admissions.s1">Submit Online Application</li>
+                    <li style="margin-bottom: 10px;" data-key="admissions.s2">Schedule a Campus Tour</li>
+                    <li style="margin-bottom: 10px;" data-key="admissions.s3">Student Interview & Assessment</li>
+                    <li data-key="admissions.s4">Enrollment & Welcome Packet</li>
                 </ol>
-                <button class="btn" style="background: white; color: var(--primary-blue);">Start Application</button>
+                <button class="btn" style="background: white; color: var(--primary-blue);"
+                    data-key="admissions.btn">Start Application</button>
             </div>
         </div>
     </section>
@@ -285,19 +576,23 @@
     <!-- 3. ABOUT US SECTION -->
     <section id="about" style="padding: 0;">
         <div class="split-section">
-            <div class="split-image-box" style="background-image: url('about.jpg');"></div>
+            <div class="split-image-box" style="background-image: url('about.jpg');">
+            </div>
             <div class="split-content">
-                <h2 style="font-size: 36px; color: var(--primary-blue); margin-bottom: 20px;">About Us</h2>
-                <p style="color: var(--text-light); margin-bottom: 20px;">
-                    International School UM is dedicated to cultivating a lifelong love of learning. We believe that a happy child is a successful child.
+                <h2 style="font-size: 36px; color: var(--primary-blue); margin-bottom: 20px;" data-key="nav.about">About
+                    Us</h2>
+                <p style="color: var(--text-light); margin-bottom: 20px;" data-key="about.p1">
+                    International School UM is dedicated to cultivating a lifelong love of learning. We believe that a
+                    happy child is a successful child.
                 </p>
-                <p style="color: var(--text-light); margin-bottom: 30px;">
-                    Our campus provides a safe, inclusive, and technologically advanced environment where students from diverse backgrounds come together to learn, create, and grow.
+                <p style="color: var(--text-light); margin-bottom: 30px;" data-key="about.p2">
+                    Our campus provides a safe, inclusive, and technologically advanced environment where students from
+                    diverse backgrounds come together to learn, create, and grow.
                 </p>
                 <ul style="color: var(--primary-blue); font-weight: 500;">
-                    <li>✓ 15 Years of Excellence</li>
-                    <li>✓ Certified International Curriculum</li>
-                    <li>✓ Small Class Sizes (Max 15)</li>
+                    <li>✓ <span data-key="about.f1">15 Years of Excellence</span></li>
+                    <li>✓ <span data-key="about.f2">Certified International Curriculum</span></li>
+                    <li>✓ <span data-key="about.f3">Small Class Sizes (Max 15)</span></li>
                 </ul>
             </div>
         </div>
@@ -307,30 +602,38 @@
     <section id="staff" class="programs">
         <div class="container">
             <!-- Modified style="margin-bottom: 10px;" to reduce space -->
-            <h2 class="section-title" style="margin-bottom: 10px;">Meet Our Staff</h2>
-            <div class="section-subtitle">Dedicated educators inspiring the next generation.</div>
-            
-            <div class="programs-grid">
+            <h2 class="section-title" style="margin-bottom: 10px;" data-key="staff.title">Meet Our Staff</h2>
+            <div class="section-subtitle" data-key="staff.subtitle">Dedicated educators inspiring the next generation.
+            </div>
+
+            <div class="programs-grid" style="justify-content: center;">
                 <div class="program-card" style="text-align: center;">
-                    <div style="width: 100px; height: 100px; background: #eee; border-radius: 50%; margin: 0 auto 15px; overflow: hidden;">
-                        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80" alt="Principal">
+                    <div
+                        style="width: 100px; height: 100px; background: #eee; border-radius: 50%; margin: 0 auto 15px; overflow: hidden;">
+                        <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=200&q=80"
+                            alt="Principal">
                     </div>
-                    <h3>Maria Ivanova</h3>
-                    <p style="color: var(--accent-green); font-weight: bold;">Principal</p>
+                    <h3 data-key="staff.s1_name">Maria Ivanova</h3>
+                    <p style="color: var(--accent-green); font-weight: bold;" data-key="staff.s1_role">Principal</p>
                 </div>
                 <div class="program-card" style="text-align: center;">
-                     <div style="width: 100px; height: 100px; background: #eee; border-radius: 50%; margin: 0 auto 15px; overflow: hidden;">
-                        <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=200&q=80" alt="Teacher">
+                    <div
+                        style="width: 100px; height: 100px; background: #eee; border-radius: 50%; margin: 0 auto 15px; overflow: hidden;">
+                        <img src="https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=200&q=80"
+                            alt="Teacher">
                     </div>
-                    <h3>John Smith</h3>
-                    <p style="color: var(--accent-green); font-weight: bold;">Head of Science</p>
+                    <h3 data-key="staff.s2_name">John Smith</h3>
+                    <p style="color: var(--accent-green); font-weight: bold;" data-key="staff.s2_role">Head of Science
+                    </p>
                 </div>
                 <div class="program-card" style="text-align: center;">
-                     <div style="width: 100px; height: 100px; background: #eee; border-radius: 50%; margin: 0 auto 15px; overflow: hidden;">
-                        <img src="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=200&q=80" alt="Teacher">
+                    <div
+                        style="width: 100px; height: 100px; background: #eee; border-radius: 50%; margin: 0 auto 15px; overflow: hidden;">
+                        <img src="https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=200&q=80"
+                            alt="Teacher">
                     </div>
-                    <h3>Sarah Lee</h3>
-                    <p style="color: var(--accent-green); font-weight: bold;">Arts Director</p>
+                    <h3 data-key="staff.s3_name">Sarah Lee</h3>
+                    <p style="color: var(--accent-green); font-weight: bold;" data-key="staff.s3_role">Arts Director</p>
                 </div>
             </div>
         </div>
@@ -339,12 +642,12 @@
     <!-- 5. GALLERY SECTION -->
     <section id="gallery">
         <div class="container">
-            <h2 class="section-title">Life at School</h2>
+            <h2 class="section-title" data-key="nav.gallery">Life at School</h2>
             <div class="gallery-grid">
-                <div class="gallery-item" style="height: 180px;"><img src="IMG_0613.jpg" alt="School life"></div>
                 <div class="gallery-item" style="height: 180px;"><img src="IMG_0588.jpg" alt="School life"></div>
                 <div class="gallery-item" style="height: 180px;"><img src="IMG_0594.jpg" alt="School life"></div>
                 <div class="gallery-item" style="height: 180px;"><img src="IMG_0598.jpg" alt="School life"></div>
+                <div class="gallery-item" style="height: 180px;"><img src="IMG_0613.jpg" alt="School life"></div>
                 <div class="gallery-item" style="height: 180px;"><img src="IMG_0609.jpg" alt="School life"></div>
                 <div class="gallery-item" style="height: 180px;"><img src="IMG_0612.jpg" alt="School life"></div>
                 <div class="gallery-item" style="height: 180px;"><img src="IMG_0621.jpg" alt="School life"></div>
@@ -353,34 +656,78 @@
         </div>
     </section>
 
-    <!-- 7. CONTACT SECTION -->
-    <section id="contact" style="background: var(--primary-blue); color: white; padding-bottom: 0;">
+    <!-- 6. NEWS SECTION -->
+    <section id="news" class="programs" style="background: white; padding: 80px 0;">
         <div class="container">
-            <h2 class="section-title" style="color: white;">Contact Us</h2>
+            <h2 class="section-title" data-key="news.title">Recent News</h2>
+            <div class="news-grid"
+                style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-top: 40px;">
+                <div class="news-card"
+                    style="background: var(--bg-light); padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); transition: transform 0.3s ease;">
+                    <p style="color: var(--accent-green); font-weight: bold; font-size: 14px; margin-bottom: 10px;"
+                        data-key="news.n1_date">Oct 12, 2023</p>
+                    <h4 style="margin-bottom: 12px; color: var(--primary-blue); font-size: 20px;"
+                        data-key="news.n1_title">New Science Lab Opening</h4>
+                    <p style="font-size: 15px; color: var(--text-light); line-height: 1.6;" data-key="news.n1_desc">We
+                        are excited to announce the opening of our state-of-the-art science laboratory next week,
+                        providing hands-on learning experiences.</p>
+                </div>
+                <div class="news-card"
+                    style="background: var(--bg-light); padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); transition: transform 0.3s ease;">
+                    <p style="color: var(--accent-green); font-weight: bold; font-size: 14px; margin-bottom: 10px;"
+                        data-key="news.n2_date">Oct 05, 2023</p>
+                    <h4 style="margin-bottom: 12px; color: var(--primary-blue); font-size: 20px;"
+                        data-key="news.n2_title">Annual Sports Day</h4>
+                    <p style="font-size: 15px; color: var(--text-light); line-height: 1.6;" data-key="news.n2_desc">Our
+                        annual sports day was a huge success! Congratulations to all the winners, participants, and our
+                        amazing team of coaches.</p>
+                </div>
+                <div class="news-card"
+                    style="background: var(--bg-light); padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); transition: transform 0.3s ease;">
+                    <p style="color: var(--accent-green); font-weight: bold; font-size: 14px; margin-bottom: 10px;"
+                        data-key="news.n3_date">Sep 28, 2023</p>
+                    <h4 style="margin-bottom: 12px; color: var(--primary-blue); font-size: 20px;"
+                        data-key="news.n3_title">Parent-Teacher Meeting</h4>
+                    <p style="font-size: 15px; color: var(--text-light); line-height: 1.6;" data-key="news.n3_desc">Join
+                        us for the first parent-teacher meeting of the semester this Friday. A great opportunity to
+                        discuss student progress and goals.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. CONTACT SECTION -->
+    <section id="contact" style="background: var(--primary-blue); color: white; padding: 80px 0 0 0;">
+        <div class="container">
+            <h2 class="section-title" style="color: white;" data-key="nav.contact">Contact Us</h2>
             <div class="footer-grid">
                 <div class="footer-col">
                     <h4>International School UM</h4>
-                    <p>123 Education Lane<br>City Center, Country</p>
+                    <p data-key="contact.address">123 Education Lane<br>City Center, Country</p>
                     <br>
                     <p>Phone: +1 234 567 890</p>
                     <p>Email: info@umschool.com</p>
                 </div>
                 <div class="footer-col">
-                    <h4>Quick Links</h4>
+                    <h4 data-key="contact.links">Quick Links</h4>
                     <ul>
-                        <li><a href="#programs">Programs</a></li>
-                        <li><a href="#admissions">Admissions</a></li>
-                        <li><a href="#staff">Staff Team</a></li>
-                        <li><a href="portal.html">Teacher/Parent Portal</a></li>
+                        <li><a href="#programs" data-key="nav.programs">Programs</a></li>
+                        <li><a href="#admissions" data-key="nav.admissions">Admissions</a></li>
+                        <li><a href="#staff" data-key="nav.staff">Staff Team</a></li>
+                        <li><a href="school-portal-supabase.html" data-key="nav.portal">Teacher/Parent Portal</a></li>
                     </ul>
                 </div>
                 <div class="footer-col">
-                    <h4>Send a Message</h4>
-                    <form onsubmit="event.preventDefault(); alert('Message Sent!');" style="display: flex; flex-direction: column; gap: 10px;">
-                        <input type="text" placeholder="Name" style="padding: 10px; border-radius: 4px; border: none;">
-                        <input type="email" placeholder="Email" style="padding: 10px; border-radius: 4px; border: none;">
-                        <textarea placeholder="Message" rows="3" style="padding: 10px; border-radius: 4px; border: none;"></textarea>
-                        <button type="submit" class="btn" style="background: var(--accent-green); color: white;">Send</button>
+                    <h4 data-key="contact.message">Send a Message</h4>
+                    <form id="contactForm" style="display: flex; flex-direction: column; gap: 10px;">
+                        <input type="text" id="contactName" data-key="contact.name" placeholder="Name" required
+                            style="padding: 10px; border-radius: 4px; border: none;">
+                        <input type="email" id="contactEmail" data-key="contact.email" placeholder="Email" required
+                            style="padding: 10px; border-radius: 4px; border: none;">
+                        <textarea id="contactMessage" data-key="contact.msg_placeholder" placeholder="Message" rows="3"
+                            required style="padding: 10px; border-radius: 4px; border: none;"></textarea>
+                        <button type="submit" class="btn" style="background: var(--accent-green); color: white;"
+                            data-key="contact.send">Send</button>
                     </form>
                 </div>
             </div>
@@ -390,5 +737,87 @@
         </div>
     </section>
 
+    <script type="module">
+        import { translations } from './translations.js';
+
+        let currentLang = 'en';
+
+        function updateContent() {
+            const translationsData = translations[currentLang];
+            if (!translationsData) return;
+
+            document.querySelectorAll('[data-key]').forEach(el => {
+                const key = el.getAttribute('data-key');
+                const keys = key.split('.');
+                let translation = translationsData;
+
+                for (const k of keys) {
+                    if (translation[k]) {
+                        translation = translation[k];
+                    } else {
+                        translation = null;
+                        break;
+                    }
+                }
+
+                if (translation) {
+                    if (el.tagName === 'INPUT' || el.tagName === 'TEXTAREA') {
+                        el.placeholder = translation;
+                    } else if (el.tagName === 'BUTTON' && el.type === 'submit') {
+                        el.textContent = translation;
+                    } else if (el.tagName === 'A' && el.classList.contains('btn')) {
+                        el.textContent = translation;
+                    } else if (el.hasAttribute('data-key-html')) {
+                        el.innerHTML = translation;
+                    } else {
+                        el.textContent = translation;
+                    }
+                }
+            });
+
+            // Handle special cases like hero title with <br>
+            if (translationsData.hero && translationsData.hero.title) {
+                document.querySelector('[data-key="hero.title"]').innerHTML = translationsData.hero.title.replace('\n', '<br>');
+            }
+
+            localStorage.setItem('school_lang', currentLang);
+        }
+
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            btn.addEventListener('click', () => {
+                document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                currentLang = btn.dataset.lang;
+                updateContent();
+            });
+        });
+
+        // Initialize from localStorage
+        currentLang = localStorage.getItem('school_lang') || 'en';
+        document.querySelectorAll('.lang-btn').forEach(btn => {
+            if (btn.dataset.lang === currentLang) btn.classList.add('active');
+            else btn.classList.remove('active');
+        });
+        updateContent();
+
+        // Form Handling
+        document.getElementById('contactForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const btn = e.target.querySelector('button');
+            const originalText = btn.textContent;
+
+            btn.disabled = true;
+            btn.textContent = 'Sending...';
+
+            // Simulate API call
+            setTimeout(() => {
+                alert('Message sent successfully!');
+                e.target.reset();
+                btn.disabled = false;
+                btn.textContent = originalText;
+            }, 1000);
+        });
+    </script>
 </body>
+
 </html>
