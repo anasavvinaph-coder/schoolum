@@ -428,31 +428,102 @@
             color: white;
         }
 
+        /* HAMBURGER MENU */
+        .hamburger {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 10px;
+            z-index: 1100;
+        }
+
+        .hamburger span {
+            display: block;
+            width: 25px;
+            height: 3px;
+            background-color: var(--primary-blue);
+            margin: 5px 0;
+            transition: 0.3s;
+        }
+
+        .mobile-nav {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: -100%;
+            width: 70%;
+            height: 100vh;
+            background: white;
+            z-index: 1050;
+            flex-direction: column;
+            padding: 100px 30px;
+            box-shadow: 2px 0 15px rgba(0, 0, 0, 0.1);
+            transition: 0.4s;
+        }
+
+        .mobile-nav.active {
+            left: 0;
+            display: flex;
+        }
+
+        .mobile-nav a {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--primary-blue);
+            text-transform: uppercase;
+            margin-bottom: 25px;
+        }
+
+        .mobile-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1040;
+        }
+
+        .mobile-overlay.active {
+            display: block;
+        }
+
         /* MOBILE */
         @media (max-width: 992px) {
+            .hamburger {
+                display: block;
+                order: 0;
+            }
+
             .nav-wrapper {
                 flex-direction: row;
                 flex-wrap: wrap;
-                justify-content: center;
+                justify-content: space-between;
                 align-items: center;
-                gap: 15px;
-                padding: 5px 0;
+                padding: 10px 20px;
+                gap: 10px;
+            }
+
+            .nav-links {
+                display: none;
             }
 
             .logo-container {
-                order: 2;
+                order: 3;
                 margin: 0;
-                justify-content: center;
             }
 
             .logo-img {
-                height: 50px;
-                width: auto;
+                height: 45px;
             }
 
             .lang-switcher {
-                display: contents;
-                /* Allows reordering children within nav-wrapper */
+                display: flex;
+                gap: 5px;
+                order: 2;
+                margin: 0;
             }
 
             .lang-btn[data-lang="en"] {
@@ -460,16 +531,15 @@
             }
 
             .lang-btn[data-lang="mne"] {
-                order: 3;
+                order: 4;
             }
 
             .portal-btn {
-                order: 4;
-                margin: 0;
-                width: 90%;
+                order: 5;
+                margin: 10px auto 0;
+                width: 100%;
                 text-align: center;
-                padding: 8px 15px;
-                font-size: 13px;
+                padding: 10px;
             }
 
             .hero h1 {
@@ -523,6 +593,12 @@
     <!-- HEADER -->
     <header>
         <div class="container nav-wrapper">
+            <button class="hamburger" id="mobileMenuBtn">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+
             <div class="logo-container">
                 <a href="#">
                     <img src="logo.jpg" alt="International School UM" class="logo-img">
@@ -548,6 +624,18 @@
             <a href="school-portal-supabase.html" class="portal-btn" data-key="nav.portal">School Portal</a>
         </div>
     </header>
+
+    <!-- MOBILE NAVIGATION OVERLAY -->
+    <div class="mobile-overlay" id="mobileOverlay"></div>
+    <nav class="mobile-nav" id="mobileNav">
+        <a href="#programs" data-key="nav.programs">Programs</a>
+        <a href="#admissions" data-key="nav.admissions">Admissions</a>
+        <a href="#about" data-key="nav.about">About Us</a>
+        <a href="#staff" data-key="nav.staff">Staff</a>
+        <a href="#gallery" data-key="nav.gallery">Gallery</a>
+        <a href="#news" data-key="nav.news">News</a>
+        <a href="#contact" data-key="nav.contact">Contact</a>
+    </nav>
 
     <!-- HERO SECTION -->
     <section class="hero">
@@ -831,6 +919,24 @@
             if (translationsData.hero && translationsData.hero.title) {
                 document.querySelector('[data-key="hero.title"]').innerHTML = translationsData.hero.title.replace('\n', '<br>');
             }
+
+            // Mobile Menu Toggle
+            const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+            const mobileNav = document.getElementById('mobileNav');
+            const mobileOverlay = document.getElementById('mobileOverlay');
+
+            function toggleMenu() {
+                mobileNav.classList.toggle('active');
+                mobileOverlay.classList.toggle('active');
+            }
+
+            mobileMenuBtn.addEventListener('click', toggleMenu);
+            mobileOverlay.addEventListener('click', toggleMenu);
+
+            // Close menu when clicking a link
+            mobileNav.querySelectorAll('a').forEach(link => {
+                link.addEventListener('click', toggleMenu);
+            });
 
             localStorage.setItem('school_lang', currentLang);
         }
