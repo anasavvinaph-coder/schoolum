@@ -167,6 +167,9 @@
 
         /* ── MOBILE ── */
         @media (max-width: 992px) {
+            .hero-bg {
+                background-position: 70% center;
+            }
             .hamburger { display: block; }
             .nav-wrapper {
                 flex-wrap: nowrap; justify-content: space-between;
@@ -395,7 +398,7 @@
                     <p>4 Jaroslava Čermaka<br>Podgorica, 81000</p>
                     <br>
                     <p>Phone: 068-599-804</p>
-                    <p>Email: <a href="mailto:schoolumpodgorica@gmail.com" style="color: var(--accent-green);">schoolumpodgorica@gmail.com</a></p>
+                    <p>Email: <a href="/cdn-cgi/l/email-protection#5e2d3d363131322b332e313a39312c373d3f1e39333f3732703d3133" style="color: var(--accent-green);"><span class="__cf_email__" data-cfemail="2a5949424545465f475a454e4d455843494b6a4d474b434604494547">[email&#160;protected]</span></a></p>
                 </div>
 
                 <!-- Форма -->
@@ -429,7 +432,7 @@
         </div>
     </section>
 
-    <script type="module">
+    <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script type="module">
         import { translations } from './translations.js?v=1.1';
 
         let currentLang = 'en';
@@ -529,13 +532,3 @@
                     document.getElementById('formSuccess').classList.add('visible');
                 } else {
                     throw new Error();
-                }
-            } catch {
-                btn.disabled = false;
-                btn.textContent = '✗ Error — please try again';
-                setTimeout(() => btn.textContent = 'Send', 3000);
-            }
-        });
-    </script>
-</body>
-</html>
