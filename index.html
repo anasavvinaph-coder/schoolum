@@ -553,6 +553,26 @@
         </div>
     </section>
 
+    <script>
+        const carouselState = { '1': 0, '2': 0, '3': 0 };
+        function updateCarousel(id) {
+            const idx = carouselState[id];
+            document.getElementById('track-' + id).style.transform = `translateX(-${idx * 100}%)`;
+            document.querySelectorAll('#dots-' + id + ' .carousel-dot').forEach((d, i) => {
+                d.classList.toggle('active', i === idx);
+            });
+        }
+        function moveCarousel(id, dir) {
+            const total = document.querySelectorAll('#track-' + id + ' img').length;
+            carouselState[id] = (carouselState[id] + dir + total) % total;
+            updateCarousel(id);
+        }
+        function goToSlide(id, idx) {
+            carouselState[id] = idx;
+            updateCarousel(id);
+        }
+    </script>
+
     <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script type="module">
         import { translations } from './translations.js?v=1.1';
 
@@ -607,25 +627,6 @@
             btn.classList.toggle('active', btn.dataset.lang === currentLang);
         });
         updateContent();
-
-        // ── CAROUSEL ──────────────────────────────────────────
-        const carouselState = { '1': 0, '2': 0, '3': 0 };
-        function updateCarousel(id) {
-            const idx = carouselState[id];
-            document.getElementById('track-' + id).style.transform = `translateX(-${idx * 100}%)`;
-            document.querySelectorAll('#dots-' + id + ' .carousel-dot').forEach((d, i) => {
-                d.classList.toggle('active', i === idx);
-            });
-        }
-        window.moveCarousel = function(id, dir) {
-            const total = document.querySelectorAll('#track-' + id + ' img').length;
-            carouselState[id] = (carouselState[id] + dir + total) % total;
-            updateCarousel(id);
-        };
-        window.goToSlide = function(id, idx) {
-            carouselState[id] = idx;
-            updateCarousel(id);
-        };
 
         // ── ОТПРАВКА ФОРМЫ через Formspree
         //
