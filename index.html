@@ -121,6 +121,58 @@
         .gallery-item img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.5s; }
         .gallery-item:hover img { transform: scale(1.1); }
 
+        /* NEWS — full width cards with carousel */
+        .news-card-full {
+            background: var(--bg-light); border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            overflow: hidden; margin-bottom: 40px;
+            display: grid; grid-template-columns: 460px 1fr;
+        }
+        .news-card-full:last-child { margin-bottom: 0; }
+        .news-carousel { position: relative; overflow: hidden; background: #ddd; }
+        .news-carousel-track {
+            display: flex; height: 100%; min-height: 300px;
+            transition: transform 0.4s ease;
+        }
+        .news-carousel-track img {
+            min-width: 100%; height: 320px; object-fit: cover; flex-shrink: 0;
+        }
+        .carousel-btn {
+            position: absolute; top: 50%; transform: translateY(-50%);
+            background: rgba(0,0,0,0.45); color: white; border: none;
+            width: 36px; height: 36px; border-radius: 50%; cursor: pointer;
+            font-size: 16px; display: flex; align-items: center; justify-content: center;
+            transition: background 0.2s; z-index: 2;
+        }
+        .carousel-btn:hover { background: rgba(0,0,0,0.7); }
+        .carousel-btn.prev { left: 10px; }
+        .carousel-btn.next { right: 10px; }
+        .carousel-dots {
+            position: absolute; bottom: 10px; left: 50%; transform: translateX(-50%);
+            display: flex; gap: 6px;
+        }
+        .carousel-dot {
+            width: 7px; height: 7px; border-radius: 50%;
+            background: rgba(255,255,255,0.5); cursor: pointer; transition: background 0.2s;
+        }
+        .carousel-dot.active { background: white; }
+        .news-body-full {
+            padding: 36px 40px; display: flex; flex-direction: column; justify-content: center;
+        }
+        .news-body-full .news-date {
+            color: var(--accent-green); font-weight: 700; font-size: 14px; margin-bottom: 10px;
+        }
+        .news-body-full h4 {
+            font-size: 22px; color: var(--primary-blue); margin-bottom: 14px; line-height: 1.3;
+        }
+        .news-body-full p { font-size: 15px; color: var(--text-light); line-height: 1.7; }
+
+        @media (max-width: 900px) {
+            .news-card-full { grid-template-columns: 1fr; }
+            .news-carousel-track img { height: 240px; }
+            .news-body-full { padding: 24px 20px; }
+        }
+
         /* CONTACT / FOOTER */
         .footer-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 60px; margin-bottom: 40px; }
         .footer-col h4 { color: var(--accent-green); margin-bottom: 20px; font-size: 18px; text-transform: uppercase; }
@@ -182,7 +234,8 @@
             .lang-btn { padding: 4px 9px; font-size: 13px; }
             .portal-btn { display: none; }
 
-            .hero-content { padding-top: 120px; }
+            .hero { align-items: flex-start; }
+            .hero-content { padding-top: 110px; }
             .hero h1 { font-size: 32px; line-height: 1.2; }
             .hero p { font-size: 18px; }
 
@@ -363,26 +416,94 @@
     </section>
 
     <!-- 5. NEWS -->
-    <section id="news" class="programs" style="background: white; padding: 80px 0;">
+    <section id="news" style="background: white; padding: 80px 0;">
         <div class="container">
             <h2 class="section-title" data-key="news.title">Recent News</h2>
-            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-top: 40px;" class="news-grid">
-                <div style="background: var(--bg-light); padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
-                    <p style="color: var(--accent-green); font-weight: bold; font-size: 14px; margin-bottom: 10px;" data-key="news.n1_date">Feb 15, 2024</p>
-                    <h4 style="margin-bottom: 12px; color: var(--primary-blue); font-size: 20px;" data-key="news.n1_title">A Journey Through Africa!</h4>
-                    <p style="font-size: 15px; color: var(--text-light); line-height: 1.6;" data-key="news.n1_desc">We had a special guest! A father of one of our Grade 3 students shared his incredible travels across Africa, taking the children on an unforgettable adventure.</p>
+
+            <!-- NEWS 1 -->
+            <div class="news-card-full">
+                <div class="news-carousel" id="carousel-1">
+                    <div class="news-carousel-track" id="track-1">
+                        <!-- Загрузите фото в репозиторий с именами news1-1.jpg ... news1-5.jpg -->
+                        <img src="news1-1.jpg" alt="News photo 1">
+                        <img src="news1-2.jpg" alt="News photo 2">
+                        <img src="news1-3.jpg" alt="News photo 3">
+                        <img src="news1-4.jpg" alt="News photo 4">
+                        <img src="news1-5.jpg" alt="News photo 5">
+                    </div>
+                    <button class="carousel-btn prev" onclick="moveCarousel('1', -1)">&#8249;</button>
+                    <button class="carousel-btn next" onclick="moveCarousel('1', 1)">&#8250;</button>
+                    <div class="carousel-dots" id="dots-1">
+                        <div class="carousel-dot active" onclick="goToSlide('1',0)"></div>
+                        <div class="carousel-dot" onclick="goToSlide('1',1)"></div>
+                        <div class="carousel-dot" onclick="goToSlide('1',2)"></div>
+                        <div class="carousel-dot" onclick="goToSlide('1',3)"></div>
+                        <div class="carousel-dot" onclick="goToSlide('1',4)"></div>
+                    </div>
                 </div>
-                <div style="background: var(--bg-light); padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
-                    <p style="color: var(--accent-green); font-weight: bold; font-size: 14px; margin-bottom: 10px;" data-key="news.n2_date">Oct 05, 2023</p>
-                    <h4 style="margin-bottom: 12px; color: var(--primary-blue); font-size: 20px;" data-key="news.n2_title">Annual Sports Day</h4>
-                    <p style="font-size: 15px; color: var(--text-light); line-height: 1.6;" data-key="news.n2_desc">Our annual sports day was a huge success! Congratulations to all the winners, participants, and our amazing team of coaches.</p>
-                </div>
-                <div style="background: var(--bg-light); padding: 30px; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);">
-                    <p style="color: var(--accent-green); font-weight: bold; font-size: 14px; margin-bottom: 10px;" data-key="news.n3_date">Sep 28, 2023</p>
-                    <h4 style="margin-bottom: 12px; color: var(--primary-blue); font-size: 20px;" data-key="news.n3_title">Parent-Teacher Meeting</h4>
-                    <p style="font-size: 15px; color: var(--text-light); line-height: 1.6;" data-key="news.n3_desc">Join us for the first parent-teacher meeting of the semester this Friday. A great opportunity to discuss student progress and goals.</p>
+                <div class="news-body-full">
+                    <p class="news-date" data-key="news.n1_date">Feb 15, 2024</p>
+                    <h4 data-key="news.n1_title">A Journey Through Africa!</h4>
+                    <p data-key="news.n1_desc">We had a special guest! A father of one of our Grade 3 students shared his incredible travels across Africa, taking the children on an unforgettable adventure that left them inspired and delighted.</p>
                 </div>
             </div>
+
+            <!-- NEWS 2 -->
+            <div class="news-card-full">
+                <div class="news-carousel" id="carousel-2">
+                    <div class="news-carousel-track" id="track-2">
+                        <!-- Загрузите фото: news2-1.jpg ... news2-5.jpg -->
+                        <img src="news2-1.jpg" alt="News photo 1">
+                        <img src="news2-2.jpg" alt="News photo 2">
+                        <img src="news2-3.jpg" alt="News photo 3">
+                        <img src="news2-4.jpg" alt="News photo 4">
+                        <img src="news2-5.jpg" alt="News photo 5">
+                    </div>
+                    <button class="carousel-btn prev" onclick="moveCarousel('2', -1)">&#8249;</button>
+                    <button class="carousel-btn next" onclick="moveCarousel('2', 1)">&#8250;</button>
+                    <div class="carousel-dots" id="dots-2">
+                        <div class="carousel-dot active" onclick="goToSlide('2',0)"></div>
+                        <div class="carousel-dot" onclick="goToSlide('2',1)"></div>
+                        <div class="carousel-dot" onclick="goToSlide('2',2)"></div>
+                        <div class="carousel-dot" onclick="goToSlide('2',3)"></div>
+                        <div class="carousel-dot" onclick="goToSlide('2',4)"></div>
+                    </div>
+                </div>
+                <div class="news-body-full">
+                    <p class="news-date" data-key="news.n2_date">Oct 05, 2023</p>
+                    <h4 data-key="news.n2_title">Annual Sports Day</h4>
+                    <p data-key="news.n2_desc">Our annual sports day was a huge success! Congratulations to all the winners, participants, and our amazing team of coaches.</p>
+                </div>
+            </div>
+
+            <!-- NEWS 3 -->
+            <div class="news-card-full">
+                <div class="news-carousel" id="carousel-3">
+                    <div class="news-carousel-track" id="track-3">
+                        <!-- Загрузите фото: news3-1.jpg ... news3-5.jpg -->
+                        <img src="news3-1.jpg" alt="News photo 1">
+                        <img src="news3-2.jpg" alt="News photo 2">
+                        <img src="news3-3.jpg" alt="News photo 3">
+                        <img src="news3-4.jpg" alt="News photo 4">
+                        <img src="news3-5.jpg" alt="News photo 5">
+                    </div>
+                    <button class="carousel-btn prev" onclick="moveCarousel('3', -1)">&#8249;</button>
+                    <button class="carousel-btn next" onclick="moveCarousel('3', 1)">&#8250;</button>
+                    <div class="carousel-dots" id="dots-3">
+                        <div class="carousel-dot active" onclick="goToSlide('3',0)"></div>
+                        <div class="carousel-dot" onclick="goToSlide('3',1)"></div>
+                        <div class="carousel-dot" onclick="goToSlide('3',2)"></div>
+                        <div class="carousel-dot" onclick="goToSlide('3',3)"></div>
+                        <div class="carousel-dot" onclick="goToSlide('3',4)"></div>
+                    </div>
+                </div>
+                <div class="news-body-full">
+                    <p class="news-date" data-key="news.n3_date">Sep 28, 2023</p>
+                    <h4 data-key="news.n3_title">Parent-Teacher Meeting</h4>
+                    <p data-key="news.n3_desc">Join us for the first parent-teacher meeting of the semester this Friday. A great opportunity to discuss student progress and goals.</p>
+                </div>
+            </div>
+
         </div>
     </section>
 
@@ -487,8 +608,26 @@
         });
         updateContent();
 
-        // ─────────────────────────────────────────────────────
-        // ОТПРАВКА ФОРМЫ через Formspree
+        // ── CAROUSEL ──────────────────────────────────────────
+        const carouselState = { '1': 0, '2': 0, '3': 0 };
+        function updateCarousel(id) {
+            const idx = carouselState[id];
+            document.getElementById('track-' + id).style.transform = `translateX(-${idx * 100}%)`;
+            document.querySelectorAll('#dots-' + id + ' .carousel-dot').forEach((d, i) => {
+                d.classList.toggle('active', i === idx);
+            });
+        }
+        window.moveCarousel = function(id, dir) {
+            const total = document.querySelectorAll('#track-' + id + ' img').length;
+            carouselState[id] = (carouselState[id] + dir + total) % total;
+            updateCarousel(id);
+        };
+        window.goToSlide = function(id, idx) {
+            carouselState[id] = idx;
+            updateCarousel(id);
+        };
+
+        // ── ОТПРАВКА ФОРМЫ через Formspree
         //
         // Инструкция (один раз):
         //   1. Зайдите на https://formspree.io и зарегистрируйтесь бесплатно.
